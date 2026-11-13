@@ -1,0 +1,10 @@
+{% extends "App_administracion/base.html" %}
+{% block heading %}Gestión de usuarios{% endblock %}
+{% block content %}
+<a class="btn mb-5" href="{% url 'App_administracion:usuario_crear' %}">Crear usuario</a>
+<div class="card overflow-x-auto"><table class="data"><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+{% for u in usuarios %}<tr><td>{{ u.get_full_name|default:u.username }}</td><td>{{ u.email }}</td><td>{{ u.get_rol_display }}</td><td>{% if u.is_active %}Activo{% else %}Inactivo{% endif %}</td><td>
+<a class="underline text-rose-700" href="{% url 'App_administracion:usuario_editar' u.pk %}">Editar</a>
+<form class="inline" method="post" action="{% url 'App_administracion:usuario_estado' u.pk %}">{% csrf_token %}<button class="underline text-rose-700 ml-3" type="submit">{% if u.is_active %}Desactivar{% else %}Reactivar{% endif %}</button></form></td></tr>
+{% empty %}<tr><td colspan="5">No hay cuentas.</td></tr>{% endfor %}</table></div>
+{% endblock %}

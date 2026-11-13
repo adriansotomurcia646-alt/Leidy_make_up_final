@@ -1,0 +1,145 @@
+{% extends 'App_usuarios/E_base.html' %}
+
+{% block title %}Servicios - Leidy Make Up{% endblock %}
+
+{% block content %}
+<style>
+  .service-disabled-actions { opacity: 1; transition: opacity .2s ease; }
+  @media (hover: hover) and (pointer: fine) {
+    .service-disabled-actions { opacity: 0; }
+    .group:hover .service-disabled-actions,
+    .group:focus-within .service-disabled-actions { opacity: 1; }
+  }
+</style>
+<div class="max-w-6xl mx-auto space-y-6">
+
+  <!-- ENCABEZADO Y BOTÓN NUEVO SERVICIO -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-[#800020]">Servicios</h1>
+      <p class="text-xs text-rose-400 mt-0.5">Administra el catálogo de servicios.</p>
+    </div>
+
+    <!-- BOTÓN NUEVO SERVICIO -->
+    <a href="{% url 'App_servicios:crear' %}" class="px-4 py-2.5 bg-[#d6336c] hover:bg-[#b02555] text-white rounded-xl text-xs font-semibold shadow-sm shadow-pink-200 transition-all flex items-center gap-1.5">
+      <i data-lucide="plus" class="w-4 h-4"></i> Nuevo servicio
+    </a>
+  </div>
+
+  <!-- SERVICIOS ACTIVOS -->
+  <section aria-labelledby="servicios-activos-heading">
+    <h2 id="servicios-activos-heading" class="text-sm font-bold text-gray-700">Servicios activos</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {% for servicio in servicios %}
+    <div class="bg-white rounded-2xl p-6 border border-rose-100/70 shadow-sm relative flex flex-col justify-between" data-service-id="{{ servicio.pk }}">
+      
+      <div>
+        <!-- CABECERA DE TARJETA CON BOTONES EDITAR Y ELIMINAR -->
+        <div class="flex justify-between items-start mb-1">
+          <div class="flex items-center gap-2">
+            <h3 class="text-sm font-bold text-[#800020]">{{ servicio.nombre }}</h3>
+            {% if servicio.es_demo %}
+              <span class="px-2 py-0.5 text-[9px] font-semibold bg-amber-100 text-amber-700 rounded-md uppercase">DEMO</span>
+            {% endif %}
+          </div>
+
+          <!-- ACCIONES DEL SERVICIO ACTIVO -->
+          <div class="flex items-center gap-2">
+            <a href="{% url 'App_servicios:editar' servicio.pk %}" class="text-gray-400 hover:text-rose-600 transition-colors" title="Editar">
+              <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+            </a>
+
+            <form method="post" action="{% url 'App_servicios:eliminar' servicio.pk %}" onsubmit="return confirm('¿Deseas desactivar este servicio? Dejará de aparecer en el catálogo de clientes.');" class="inline">
+              {% csrf_token %}
+              <button type="submit" class="text-gray-400 hover:text-amber-700 transition-colors" title="Desactivar servicio" aria-label="Desactivar {{ servicio.nombre }}">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <p class="text-[11px] text-gray-400 font-medium mb-2">{{ servicio.categoria }}</p>
+        <p class="text-xs text-gray-500 mb-4 leading-relaxed">{{ servicio.descripcion|default:"" }}</p>
+      </div>
+
+      <!-- PRECIO Y DURACIÓN -->
+      <div class="flex items-center gap-4 text-xs font-semibold text-gray-600 pt-3 border-t border-gray-50">
+        <span class="flex items-center gap-1 text-gray-700">
+          <i data-lucide="tag" class="w-3.5 h-3.5 text-rose-400"></i>
+          ${{ servicio.precio }}
+        </span>
+        <span class="flex items-center gap-1 text-gray-400 font-normal">
+          <i data-lucide="clock" class="w-3.5 h-3.5 text-gray-400"></i>
+          {{ servicio.duracion }} min
+        </span>
+      </div>
+
+    </div>
+    {% empty %}
+    <div class="col-span-full bg-white rounded-2xl border border-rose-100 p-12 text-center shadow-sm">
+      <p class="text-xs text-gray-400">No hay servicios activos. Puedes agregar uno nuevo o reactivar un servicio desactivado.</p>
+    </div>
+    {% endfor %}
+  </div>
+  </section>
+
+  <!-- SERVICIOS DESACTIVADOS -->
+  <section aria-labelledby="servicios-desactivados-heading">
+    <h2 id="servicios-desactivados-heading" class="text-sm font-bold text-gray-700">Servicios desactivados</h2>
+    {% if servicios_desactivados %}
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {% for servicio in servicios_desactivados %}
+          <article class="group flex flex-col justify-between rounded-2xl border border-amber-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md focus-within:shadow-md" data-service-id="{{ servicio.pk }}">
+            <div>
+              <div class="mb-1 flex items-start justify-between gap-3">
+                <div class="flex min-w-0 items-center gap-2">
+                  <h3 class="break-words text-sm font-bold text-[#800020]">{{ servicio.nombre }}</h3>
+                  {% if servicio.es_demo %}
+                    <span class="shrink-0 rounded-md bg-amber-100 px-2 py-0.5 text-[9px] font-semibold uppercase text-amber-700">DEMO</span>
+                  {% endif %}
+                </div>
+              </div>
+              <p class="mb-2 text-[11px] font-medium text-gray-400">{{ servicio.categoria }}</p>
+              <p class="mb-4 break-words text-xs leading-relaxed text-gray-500">{{ servicio.descripcion|default:"" }}</p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-4 border-t border-gray-50 pt-3 text-xs font-semibold text-gray-600">
+              <span class="flex items-center gap-1 text-gray-700">
+                <i data-lucide="tag" class="h-3.5 w-3.5 text-rose-400"></i>
+                ${{ servicio.precio }}
+              </span>
+              <span class="flex items-center gap-1 font-normal text-gray-400">
+                <i data-lucide="clock" class="h-3.5 w-3.5 text-gray-400"></i>
+                {{ servicio.duracion }} min
+              </span>
+            </div>
+
+            <div class="mt-4 flex flex-col gap-3">
+              <div class="service-disabled-actions flex flex-wrap items-center gap-2">
+                <form method="post" action="{% url 'App_servicios:reactivar' servicio.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" class="min-h-11 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-emerald-700" aria-label="Reactivar {{ servicio.nombre }}">
+                    Reactivar
+                  </button>
+                </form>
+                <form method="post" action="{% url 'App_servicios:eliminar_permanentemente' servicio.pk %}" onsubmit="return confirm('¿Eliminar permanentemente este servicio? Esta acción no se puede deshacer. Si existen citas asociadas, el servicio se conservará desactivado.');">
+                  {% csrf_token %}
+                  <button type="submit" class="min-h-11 rounded-xl border border-red-200 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50" aria-label="Eliminar permanentemente {{ servicio.nombre }}">
+                    Eliminar permanentemente
+                  </button>
+                </form>
+              </div>
+              <span class="self-end rounded-lg border border-amber-300 bg-yellow-300 px-3 py-1.5 text-xs font-semibold text-gray-900 shadow-sm">
+                Servicio desactivado
+              </span>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="rounded-2xl border border-rose-100 bg-white p-5 text-xs text-gray-400">No hay servicios desactivados.</p>
+    {% endif %}
+  </section>
+
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual de usuario - Leidy Make Up</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: #fdf8f9; }
+    a:focus-visible { outline: 3px solid #d6336c; outline-offset: 3px; }
+  </style>
+</head>
+<body class="min-h-screen px-4 py-8 text-gray-800 sm:px-6">
+  <main class="mx-auto max-w-4xl space-y-6" aria-labelledby="manual-title">
+    <header class="rounded-3xl bg-gradient-to-r from-rose-700 via-rose-600 to-pink-500 p-6 text-white shadow-lg sm:p-8">
+      <p class="text-sm font-semibold uppercase tracking-wide text-rose-100">Leidy Make Up</p>
+      <h1 id="manual-title" class="mt-2 text-2xl font-bold sm:text-3xl">Manual de usuario</h1>
+      <p class="mt-2 max-w-2xl text-sm text-rose-50">Sigue estos pasos para crear tu cuenta, consultar servicios y gestionar tus citas.</p>
+      <nav class="mt-5 flex flex-wrap gap-3" aria-label="Accesos del manual">
+        <a href="{% url 'App_usuarios:login' %}" class="inline-flex min-h-11 items-center rounded-xl bg-white px-4 py-2 text-sm font-bold text-rose-700 hover:bg-rose-50">Iniciar sesión</a>
+        <a href="{% url 'App_usuarios:registro' %}" class="inline-flex min-h-11 items-center rounded-xl border border-white/60 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10">Crear cuenta</a>
+      </nav>
+    </header>
+
+    <section class="grid gap-4 sm:grid-cols-2" aria-label="Instrucciones">
+      <article id="registro" class="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+        <h2 class="text-lg font-bold text-rose-800">1. Registrarte</h2>
+        <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-gray-600">
+          <li>Abre <a class="font-semibold text-rose-700 underline" href="{% url 'App_usuarios:registro' %}">Crear cuenta</a>.</li>
+          <li>Escribe tu nombre, correo electrónico y contraseña. El apellido y el teléfono son opcionales.</li>
+          <li>Selecciona «Crear cuenta». El registro público crea una cuenta de cliente.</li>
+          <li>Cuando aparezca el aviso de éxito, continúa al inicio de sesión.</li>
+        </ol>
+      </article>
+
+      <article id="inicio-sesion" class="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+        <h2 class="text-lg font-bold text-rose-800">2. Iniciar sesión</h2>
+        <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-gray-600">
+          <li>Abre <a class="font-semibold text-rose-700 underline" href="{% url 'App_usuarios:login' %}">Iniciar sesión</a>.</li>
+          <li>Escribe el correo o nombre de usuario y la contraseña de tu cuenta.</li>
+          <li>Elige «Cliente» o «Estilista» según el tipo de cuenta que ya tienes y envía el formulario.</li>
+        </ol>
+        <p class="mt-3 text-xs text-gray-500">El registro público no crea cuentas de estilista; estas deben ser asignadas por la administración.</p>
+      </article>
+
+      <article id="servicios" class="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+        <h2 class="text-lg font-bold text-rose-800">3. Consultar los servicios</h2>
+        <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-gray-600">
+          <li>Abre el <a class="font-semibold text-rose-700 underline" href="{% url 'App_servicios:lista' %}">catálogo de servicios</a> para ver los servicios activos.</li>
+          <li>Revisa el nombre, la categoría, el precio y la duración de cada servicio.</li>
+        </ol>
+      </article>
+
+      <article id="agendar" class="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+        <h2 class="text-lg font-bold text-rose-800">4. Solicitar y agendar una cita</h2>
+        <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-gray-600">
+          <li>Inicia sesión como cliente y abre «Reservar cita».</li>
+          <li>Selecciona un servicio, una fecha futura y uno de los horarios disponibles.</li>
+          <li>Si lo deseas, agrega un mensaje o archivos de referencia y envía la solicitud.</li>
+          <li>La solicitud queda «Pendiente» hasta que la estilista la confirme o la rechace.</li>
+        </ol>
+      </article>
+
+      <article id="estado" class="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+        <h2 class="text-lg font-bold text-rose-800">5. Consultar el estado</h2>
+        <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-gray-600">
+          <li>Inicia sesión y abre «Mis citas».</li>
+          <li>Consulta allí la fecha, la hora y el estado de cada solicitud: pendiente, confirmada, rechazada, cancelada o finalizada.</li>
+        </ol>
+      </article>
+
+      <article id="cancelar" class="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+        <h2 class="text-lg font-bold text-rose-800">6. Cancelar una cita</h2>
+        <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-gray-600">
+          <li>Abre «Mis citas» y localiza la solicitud o cita.</li>
+          <li>El botón «Cancelar» está disponible mientras su estado sea «Pendiente» o «Confirmada».</li>
+          <li>Confirma la acción cuando el navegador lo solicite. Las citas rechazadas, ya canceladas o finalizadas no se pueden cancelar desde esta opción.</li>
+        </ol>
+      </article>
+    </section>
+
+    <footer class="rounded-2xl border border-rose-100 bg-white p-4 text-sm text-gray-600">
+      La disponibilidad depende de los horarios que muestra el sistema. Si una fecha no tiene horarios disponibles, elige otra fecha.
+      <a class="ml-1 font-semibold text-rose-700 underline" href="{% url 'App_usuarios:login' %}">Volver al inicio de sesión</a>
+    </footer>
+  </main>
+</body>
+</html>

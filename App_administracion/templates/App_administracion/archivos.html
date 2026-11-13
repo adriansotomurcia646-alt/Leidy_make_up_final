@@ -1,0 +1,5 @@
+{% extends "App_administracion/base.html" %}
+{% block heading %}Imágenes y archivos de las citas{% endblock %}
+{% block content %}
+<section class="card overflow-x-auto"><table class="data"><tr><th>Cita</th><th>Cliente</th><th>Nombre</th><th>Fecha</th><th>Acceso</th></tr>{% for a in archivos %}<tr><td>{{ a.cita_id }}</td><td>{{ a.cita.cliente }}</td><td>{{ a.nombre_original }}</td><td>{{ a.creado_en }}</td><td><a class="underline text-rose-700" href="{% url 'App_agenda:descargar_adjunto' a.pk %}">Descargar protegido</a></td></tr>{% empty %}<tr><td colspan="5">No hay adjuntos.</td></tr>{% endfor %}</table></section>
+{% endblock %}

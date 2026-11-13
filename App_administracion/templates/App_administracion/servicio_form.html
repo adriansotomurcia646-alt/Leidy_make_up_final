@@ -1,0 +1,5 @@
+{% extends "App_administracion/base.html" %}
+{% block heading %}Editar servicio{% endblock %}
+{% block content %}
+<div class="card max-w-2xl"><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn mt-4">Guardar</button></form></div>
+{% endblock %}

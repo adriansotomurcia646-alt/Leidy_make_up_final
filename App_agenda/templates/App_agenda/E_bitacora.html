@@ -1,0 +1,5 @@
+{% extends 'App_usuarios/E_base.html' %}{% block content %}
+<main class="max-w-4xl mx-auto p-6 bg-white rounded-2xl"><h1 class="text-xl font-bold">Historial de cita #{{ cita.pk }}</h1>
+<p class="text-sm my-3">{{ cita.servicio.nombre }} · {{ cita.cliente }} · {{ cita.fecha }}</p>
+<table class="w-full text-xs"><thead><tr><th>Fecha</th><th>Acción</th><th>Usuario</th><th>Cambio</th><th>Detalle</th></tr></thead><tbody>
+{% for evento in eventos %}<tr class="border-t"><td class="p-2">{{ evento.fecha }}</td><td>{{ evento.accion }}</td><td>{{ evento.persona }}</td><td>{{ evento.estado_anterior }} → {{ evento.estado_nuevo }}</td><td>{{ evento.detalle }}</td></tr>{% empty %}<tr><td colspan="5">Sin eventos registrados.</td></tr>{% endfor %}</tbody></table></main>{% endblock %}

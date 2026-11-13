@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leidy Make Up — Inicio</title><meta name="description" content="Descubre servicios de maquillaje y belleza, consulta precios y reserva en Leidy Make Up."><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-rose-50 text-slate-800"><header class="max-w-6xl mx-auto px-6 py-6 flex flex-wrap gap-4 justify-between items-center">
+<a href="/" class="text-2xl font-bold text-rose-700">Leidy Make Up</a><nav class="flex flex-wrap gap-4 text-sm font-semibold">
+<a href="{% url 'App_servicios:lista' %}">Servicios</a><a href="{% url 'App_usuarios:registro' %}">Registro</a>
+<a href="{% url 'App_usuarios:login' %}?rol=cliente">Cliente</a><a href="{% url 'App_usuarios:e_login' %}">Estilista</a>
+<a href="{% url 'App_usuarios:a_login' %}">Administrador</a></nav></header>
+<main class="max-w-6xl mx-auto px-6"><section class="rounded-3xl bg-gradient-to-r from-rose-700 to-pink-500 text-white px-8 py-16 md:py-24">
+<p class="uppercase tracking-widest text-rose-100 text-sm">Tu belleza, nuestro cuidado</p><h1 class="text-4xl md:text-6xl font-bold my-5">Bienvenida a Leidy Make Up</h1>
+<p class="max-w-2xl text-lg">Explora nuestros servicios de maquillaje y belleza y consulta horarios antes de reservar tu cita.</p>
+<div class="flex flex-wrap gap-3 mt-8"><a class="bg-white text-rose-800 rounded-xl px-5 py-3 font-semibold" href="{% url 'App_servicios:lista' %}">Ver servicios</a>
+<a class="border border-white rounded-xl px-5 py-3 font-semibold" href="{% url 'App_agenda:c_reservar' %}">Consultar disponibilidad</a></div></section>
+<section class="py-12"><h2 class="text-2xl font-bold mb-6">Servicios destacados</h2><div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+{% for servicio in servicios %}<article class="bg-white rounded-2xl p-6 shadow-sm border border-rose-100">
+<h3 class="text-lg font-bold">{{ servicio.nombre }}</h3><p class="text-gray-600 mt-2">{{ servicio.descripcion|truncatewords:25 }}</p>
+<p class="mt-3 font-semibold">${{ servicio.precio }} · {{ servicio.duracion }} minutos</p>
+<a class="text-rose-700 underline mt-3 inline-block" href="{% url 'App_agenda:c_reservar' %}?servicio={{ servicio.pk }}">Consultar horario</a></article>
+{% empty %}<p>No hay servicios disponibles por el momento.</p>{% endfor %}</div></section></main>
+<footer class="text-center text-sm p-8 text-gray-500">Leidy Make Up · Agenda de citas</footer></body></html>

@@ -1,0 +1,25 @@
+LEIDY MAKE UP — PROYECTO RECONSTRUIDO (13-11-2026)
+
+✓ 16 modelos del diagrama relacional (con migraciones para las FK renombradas).
+✓ 53 requisitos/historias usados como referencia y conservados en Excel.
+✓ Registro de clientes SIN VERIFICACIÓN DE CORREO (cuenta activa directamente).
+✓ Se conserva el HOME principal y los paneles de cliente, estilista y administrador.
+
+LINUX / NOBARA / FEDORA / UBUNTU:
+1. Descomprime este ZIP.
+2. Abre una terminal en la carpeta LeidyMakeUp_Django_Reconstruido.
+3. Ejecuta: bash iniciar_linux.sh
+4. Visita http://127.0.0.1:8000/
+5. Para crear el primer administrador en otra terminal:
+   source .venv/bin/activate
+   python manage.py createsuperuser
+6. Desde Administración registra una estilista, servicios y horarios.
+
+Antes de la entrega académica, comprueba:
+   python manage.py check
+   python manage.py makemigrations --check --dry-run
+   python manage.py test
+
+Nota: las pruebas Django NO se pudieron ejecutar dentro del entorno de
+reconstrucción. Sintaxis y archivos ZIP sí se verificaron.
+Consulta README.md y documentacion/MODELO_RELACIONAL_AJUSTADO.md.

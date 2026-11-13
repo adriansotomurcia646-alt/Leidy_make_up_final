@@ -1,0 +1,8 @@
+{% extends 'App_usuarios/E_base.html' %}{% block content %}<main class="max-w-3xl mx-auto p-6 space-y-4 bg-white rounded-2xl"><h1 class="text-2xl font-bold">Manual de la administradora-estilista</h1>
+<p>1. Configura tu especialidad, horarios y bloqueos en <a class="underline" href="{% url 'App_usuarios:configuracion' %}">Configuración</a>. Los bloques impiden nuevas reservas.</p>
+<p>2. Publica servicios con precio y duración en <a class="underline" href="{% url 'App_servicios:lista' %}">Servicios</a>.</p>
+<p>3. Revisa <a class="underline" href="{% url 'App_agenda:e_solicitudes' %}">Solicitudes</a>. Aceptar verifica que no se crucen horarios. Rechazar puede registrar motivo. El historial se consulta desde la solicitud.</p>
+<p>4. En <a class="underline" href="{% url 'App_agenda:e_calendario' %}">Calendario</a>, marca la atención «En proceso» al iniciar y «Finalizada» al terminar. Nunca se finaliza automáticamente por la fecha.</p>
+<p>5. Los pagos se registran únicamente cuando el dinero se haya recibido en <a class="underline" href="{% url 'App_facturacion:inventario' %}">Cobros y pagos</a>. El monto no puede superar el saldo.</p>
+<p>6. Consulta <a class="underline" href="{% url 'App_facturacion:reportes' %}">Reportes</a> y exporta Excel o PDF. Cierra caja al finalizar tu jornada y respalda la base de datos fuera del repositorio.</p>
+<p>7. Usa <a class="underline" href="{% url 'App_agenda:notificaciones' %}">Notificaciones</a> y Mensajes para comunicar novedades a las clientas.</p></main>{% endblock %}

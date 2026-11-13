@@ -1,0 +1,14 @@
+{% extends "App_administracion/base.html" %}
+{% block heading %}Agenda global{% endblock %}
+{% block content %}
+<section class="card mb-5"><form method="get" class="flex flex-wrap gap-3 items-end"><div><label for="fecha">Filtrar por fecha</label><input type="date" id="fecha" name="fecha" value="{{ fecha }}"></div><button class="btn">Consultar</button></form></section>
+<section class="card overflow-x-auto mb-5"><h2 class="text-xl font-bold mb-3">Todas las citas (máximo 200)</h2><table class="data"><tr><th>Fecha</th><th>Cliente</th><th>Servicio</th><th>Profesional</th><th>Estado</th><th>Reasignar</th></tr>
+{% for c in citas %}<tr><td>{{ c.fecha }} {{ c.hora_inicio }}</td><td>{{ c.cliente }}</td><td>{{ c.servicio.nombre }}</td><td>{{ c.estilista }}</td><td>{{ c.get_estado_display }}</td><td><form method="post" action="{% url 'App_administracion:reasignar' c.pk %}">{% csrf_token %}<select name="estilista_id" aria-label="Nueva profesional"><option value="">Elegir</option>{% for e in estilistas %}<option value="{{ e.pk }}">{{ e }}</option>{% endfor %}</select><button class="btn mt-1">Asignar</button></form></td></tr>
+{% empty %}<tr><td colspan="6">No hay citas.</td></tr>{% endfor %}</table></section>
+<div class="grid md:grid-cols-2 gap-4"><section class="card"><h2 class="font-bold text-lg mb-3">Bloquear jornada</h2><form method="post" action="{% url 'App_administracion:bloquear' %}">{% csrf_token %}<label>Estilista</label><select name="estilista_id" required><option value="todos">Todas las estilistas (cierre general)</option>{% for e in estilistas %}<option value="{{ e.pk }}">{{ e }}</option>{% endfor %}</select>{{ bloqueo_form.as_p }}<button class="btn mt-3">Registrar bloqueo</button></form>
+<h3 class="font-bold my-3">Bloqueos recientes</h3>{% for b in bloqueos %}<p>{{ b.estilista }} · {{ b.fecha_inicio }}–{{ b.fecha_fin }}: {{ b.motivo }}</p>{% empty %}<p>Sin bloqueos.</p>{% endfor %}</section>
+<section class="card"><h2 class="font-bold text-lg mb-3">Políticas de agenda</h2><form method="post" action="{% url 'App_administracion:politicas' %}">{% csrf_token %}<label>Estilista</label><select name="estilista_id" required>{% for e in estilistas %}<option value="{{ e.pk }}">{{ e }}</option>{% endfor %}</select>
+<label>Anticipación mínima de reserva (minutos)</label><input type="number" min="0" max="43200" name="anticipacion_reserva_minutos" value="60" required>
+<label>Anticipación mínima de cancelación (minutos)</label><input type="number" min="0" max="43200" name="anticipacion_cancelacion_minutos" value="120" required><button class="btn mt-4">Guardar políticas</button></form>
+<h3 class="font-bold my-3">Políticas actuales</h3>{% for p in politicas %}<p>{{ p.estilista }}: reserva {{ p.anticipacion_reserva_minutos }} min · cancelación {{ p.anticipacion_cancelacion_minutos }} min</p>{% empty %}<p>Se aplican 60 y 120 minutos por defecto.</p>{% endfor %}</section></div>
+{% endblock %}

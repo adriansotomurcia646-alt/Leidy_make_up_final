@@ -1,0 +1,7 @@
+{% extends "App_administracion/base.html" %}
+{% block heading %}Mensajes de clientes{% endblock %}
+{% block content %}
+<section class="card"><form method="get"><label>Seleccionar cliente</label><select name="cliente" onchange="this.form.submit()"><option value="">Elegir</option>{% for c in clientes %}<option value="{{ c.persona_id }}" {% if contacto.pk == c.persona_id %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></form>
+{% if contacto %}<h2 class="font-semibold my-4">Conversación con {{ contacto }}</h2><div class="space-y-2 mb-4">{% for m in mensajes %}<div class="p-3 rounded bg-rose-50">{{ m.remitente }}: {{ m.contenido }} <small>{{ m.creado_en }}</small></div>{% empty %}<p>No hay mensajes.</p>{% endfor %}</div>
+<form method="post">{% csrf_token %}<input type="hidden" name="cliente_id" value="{{ contacto.pk }}"><label>Respuesta</label><textarea name="contenido" maxlength="2000" required rows="4"></textarea><button class="btn mt-3">Enviar respuesta</button></form>{% endif %}</section>
+{% endblock %}

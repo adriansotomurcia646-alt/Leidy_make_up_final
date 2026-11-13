@@ -1,0 +1,9 @@
+{% extends "App_administracion/base.html" %}
+{% block heading %}Ayuda del administrador{% endblock %}
+{% block content %}<article class="card max-w-3xl prose">
+<p>Este panel está reservado a cuentas con rol Administrador. Los clientes y estilistas usan sus propios módulos.</p>
+<h2 class="font-bold text-xl mt-4">Usuarios y roles</h2><p>En «Cuentas y roles» puedes crear, editar, activar o desactivar cuentas. Los clientes pueden registrarse desde la página pública; para crear una estilista o administrador utiliza este panel.</p>
+<h2 class="font-bold text-xl mt-4">Servicios y agenda</h2><p>En «Servicios» registra nombre, categoría, precio y duración. Desactiva en lugar de eliminar para conservar las citas antiguas. En «Agenda y políticas» consulta todas las citas, reasigna a una estilista libre, registra bloqueos y fija la anticipación de reservas y cancelaciones.</p>
+<h2 class="font-bold text-xl mt-4">Reportes, pagos y auditoría</h2><p>En «Ingresos y reportes» filtra fechas y profesionales antes de exportar Excel o PDF. En «Cierre de caja» registra el cierre una sola vez cada día. «Auditoría» muestra cambios de citas e intentos de acceso.</p>
+<h2 class="font-bold text-xl mt-4">Seguridad y respaldos</h2><p>Descarga copias SQLite únicamente desde un equipo privado. Nunca publiques los respaldos, el archivo .env o datos personales de clientes. El envío de contraseñas requiere configurar un servidor SMTP de confianza.</p>
+</article>{% endblock %}

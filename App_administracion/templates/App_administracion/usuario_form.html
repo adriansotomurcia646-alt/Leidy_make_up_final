@@ -1,0 +1,7 @@
+{% extends "App_administracion/base.html" %}
+{% block heading %}{{ titulo }}{% endblock %}
+{% block content %}
+<div class="card max-w-2xl"><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn mt-5" type="submit">Guardar cuenta</button>
+<a class="ml-4 underline" href="{% url 'App_administracion:usuarios' %}">Regresar</a></form></div>
+<p class="text-sm text-slate-500 mt-4">Las contraseñas se almacenan con hash. Cambiar el rol de una cuenta con citas históricas está restringido.</p>
+{% endblock %}

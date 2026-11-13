@@ -1,0 +1,13 @@
+VERIFICACIÓN ESTÁTICA (13/11/2026)
+
+* Modelos detectados: 16/16.
+* Relaciones FK/1:1 del diagrama detectadas: 17.
+* Requisitos indexados en CSV: 53 = VI 3, CLI 18, ES 14, AD 18.
+* Archivos Python con sintaxis válida: 82.
+* Registro: creación de Persona/Cliente activa sin envío de correo de activación.
+* Migraciones adicionales: usuarios 0004, agenda 0009, facturación 0004.
+* Portal y paneles de tres roles conservados.
+
+IMPORTANTE: Sin ejecución de Django, tests HTTP, DB migrations ni pruebas
+manuales en navegador. El informe NO certifica cumplimiento de 53 historias,
+166 escenarios ni despliegue para producción. Ejecutar `python manage.py test`.
