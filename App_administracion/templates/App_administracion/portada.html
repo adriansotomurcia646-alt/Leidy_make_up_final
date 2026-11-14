@@ -1,0 +1,53 @@
+{% extends 'App_administracion/base.html' %}
+{% load static %}
+{% block title %}Fotos de portada | Leidy Make Up{% endblock %}
+{% block heading %}Fotografías destacadas{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/maison-portada-admin.css' %}">
+<div class="portada-admin-intro">
+  <div><span class="maison-overline">IDENTIDAD VISUAL · MAISON</span>
+    <h2>Tu salón, tus fotografías.</h2>
+    <p>Sube fotografías reales para reemplazar la ilustración de la mujer. Se mostrarán automáticamente, una tras otra, con un desvanecimiento elegante en la portada y/o en el acceso a las cuentas.</p>
+  </div>
+  <div class="portada-admin-preview-links"><a href="/?vista=publica" target="_blank" rel="noopener">Ver portada ↗</a><a href="{% url 'App_usuarios:login' %}?vista=publica" target="_blank" rel="noopener">Ver inicio de sesión ↗</a><div class="portada-admin-stats"><strong>{{ fotos|length }}</strong><span>fotografías cargadas</span></div></div>
+</div>
+<section class="portada-admin-panel" aria-labelledby="titulo-subir">
+  <div class="portada-admin-panel-head"><div><span class="maison-overline">01 · AÑADIR FOTOGRAFÍAS</span><h3 id="titulo-subir">Nueva selección</h3></div><span class="portada-admin-hint">JPG, PNG o WebP · 5 MB por foto · máximo 12 por carga</span></div>
+  <form method="post" enctype="multipart/form-data" class="portada-admin-upload-form" data-portada-upload>{% csrf_token %}
+    <label class="portada-admin-file-zone" for="fotos-portada">
+      <span class="portada-admin-file-icon" aria-hidden="true">✦</span>
+      <strong>Selecciona varias fotografías</strong>
+      <span>Elige tus imágenes desde el dispositivo</span>
+      <input type="file" id="fotos-portada" name="fotografias" accept="image/jpeg,image/png,image/webp" multiple required data-portada-input>
+    </label>
+    <div class="portada-admin-preview" data-portada-preview aria-live="polite"></div>
+    <fieldset class="portada-admin-where"><legend>¿Dónde quieres mostrarlas?</legend>
+      <label><input type="checkbox" name="mostrar_en_portada" checked> Página de inicio</label>
+      <label><input type="checkbox" name="mostrar_en_login" checked> Inicio de sesión</label>
+    </fieldset>
+    <button type="submit" class="portada-admin-submit">Publicar fotografías <span aria-hidden="true">↗</span></button>
+  </form>
+</section>
+<section class="portada-admin-panel" aria-labelledby="titulo-ordenar">
+  <div class="portada-admin-panel-head"><div><span class="maison-overline">02 · ORGANIZAR CARRUSEL</span><h3 id="titulo-ordenar">Colección actual</h3></div><span class="portada-admin-hint">El orden más bajo aparece primero · cambio cada 5,8 s</span></div>
+  <div class="portada-admin-grid">
+  {% for foto in fotos %}
+  <article class="portada-admin-card">
+    <div class="portada-admin-image"><img src="{{ foto.imagen.url }}" alt="{{ foto.titulo|default:'Fotografía del carrusel' }}" loading="lazy"><span>{% if foto.activa %}PUBLICADA{% else %}OCULTA{% endif %}</span></div>
+    <div class="portada-admin-card-content">
+      <form action="{% url 'App_administracion:portada_guardar' foto.pk %}" method="post" class="portada-admin-edit">{% csrf_token %}
+        <label>Descripción de la foto<input name="titulo" value="{{ foto.titulo }}" maxlength="140" placeholder="Ej. Maquillaje de novia"></label>
+        <label>Orden<input type="number" name="orden" value="{{ foto.orden }}" min="0" max="32767" required></label>
+        <div class="portada-admin-flags"><label><input type="checkbox" name="activa" {% if foto.activa %}checked{% endif %}> Publicada</label><label><input type="checkbox" name="mostrar_en_portada" {% if foto.mostrar_en_portada %}checked{% endif %}> Portada</label><label><input type="checkbox" name="mostrar_en_login" {% if foto.mostrar_en_login %}checked{% endif %}> Acceso</label></div>
+        <button type="submit" class="portada-admin-save">Guardar cambios</button>
+      </form>
+      <form action="{% url 'App_administracion:portada_eliminar' foto.pk %}" method="post" class="portada-admin-remove" data-portada-delete>{% csrf_token %}<button type="submit">Eliminar fotografía</button></form>
+    </div>
+  </article>
+  {% empty %}
+  <div class="portada-admin-empty"><span aria-hidden="true">✧</span><strong>Todavía no has subido fotografías</strong><p>La ilustración actual seguirá mostrándose hasta que publiques la primera imagen.</p></div>
+  {% endfor %}
+  </div>
+</section>
+<script defer src="{% static 'js/portada-admin.js' %}"></script>
+{% endblock %}

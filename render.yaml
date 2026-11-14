@@ -1,0 +1,54 @@
+# Solo recursos que pueden funcionar con $0 (sujetos a cuotas y suspensión).
+# IMPORTANTE: Supabase se crea aparte (PostgreSQL + Storage).
+# Nunca hacer commit de .env, ni poner credenciales en render.yaml.
+services:
+  - type: web
+    name: leidy-make-up
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements-postgresql.txt && python manage.py collectstatic --noinput
+    startCommand: python manage.py migrate && gunicorn Pr_makeupweb.wsgi:application --bind 0.0.0.0:$PORT --workers 1
+    healthCheckPath: /
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: 'False'
+      - key: DJANGO_ALLOWED_HOSTS
+        value: '.onrender.com'
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: 'https://*.onrender.com'
+      - key: DJANGO_SSL_REDIRECT
+        value: 'True'
+      - key: DJANGO_ENABLE_WHITENOISE
+        value: 'True'
+      - key: DJANGO_TRUST_PROXY_SSL
+        value: 'True'
+      - key: RENDER_PLAN_FREE
+        value: '1'
+      - key: PYTHON_VERSION
+        value: '3.13.9'
+      - key: DB_POOLER_MODE
+        value: 'session'
+      - key: DATABASE_URL
+        sync: false
+      - key: EMAIL_BACKEND
+        value: 'Pr_makeupweb.gmail_backend.GmailAPIBackend'
+      - key: GMAIL_SENDER_EMAIL
+        value: 'make.up.leidy.1986@gmail.com'
+      - key: GMAIL_CLIENT_ID
+        sync: false
+      - key: GMAIL_CLIENT_SECRET
+        sync: false
+      - key: GMAIL_REFRESH_TOKEN
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        value: 'Leidy Make Up <make.up.leidy.1986@gmail.com>'
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: SUPABASE_PUBLIC_BUCKET
+        value: 'leidy-publico'
+      - key: SUPABASE_PRIVATE_BUCKET
+        value: 'leidy-privado'

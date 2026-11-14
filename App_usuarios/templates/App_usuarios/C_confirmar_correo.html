@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmar correo - Leidy Make Up</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; background-color: #fdf8f9; }
+    input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid #d6336c; outline-offset: 2px; }
+    button { min-height: 44px; }
+  </style>
+<link rel="stylesheet" href="{% static 'css/atelier.css' %}"><link rel="stylesheet" href="{% static 'css/refinement.css' %}"><link rel="stylesheet" href="{% static 'css/maison.css' %}">
+</head>
+<body class="lm-auth min-h-screen flex items-center justify-center p-4">
+  <main class="lm-auth-card w-full max-w-md rounded-3xl border border-rose-100 bg-white p-8 shadow-sm"><a class="lm-auth-home" href="/">← Volver al inicio</a>
+    <div class="mb-6 text-center">
+      <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-600 text-white">
+        <i data-lucide="mail-check" class="h-6 w-6"></i>
+      </div>
+      <h1 class="text-xl font-bold text-gray-900">Confirma tu correo electrónico</h1>
+      <p class="mt-2 text-sm text-gray-600">Enviamos un código de 6 dígitos a <strong class="break-all">{{ email }}</strong>.</p>
+      <p class="mt-2 text-xs text-gray-500">El código vence en 10 minutos. Tu cuenta aún no está creada.</p>
+    </div>
+    {% for message in messages %}
+      <p class="mb-3 rounded-xl border p-3 text-sm {% if 'success' in message.tags %}border-emerald-200 bg-emerald-50 text-emerald-800{% else %}border-red-200 bg-red-50 text-red-800{% endif %}" role="status">{{ message }}</p>
+    {% endfor %}
+    {% if codigo_vencido %}
+      <p class="mb-3 rounded-xl bg-amber-50 p-3 text-sm text-amber-800" role="alert">Este código ha caducado. Solicita uno nuevo.</p>
+    {% endif %}
+    {% if intentos_restantes == 0 %}
+      <p class="mb-3 rounded-xl bg-amber-50 p-3 text-sm text-amber-800" role="alert">Agotaste los intentos. Solicita otro código.</p>
+    {% endif %}
+    <form method="post" action="{% url 'App_usuarios:confirmar_registro' %}" class="space-y-4">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+      <div role="alert" class="rounded-xl bg-red-50 p-3 text-sm text-red-700">{{ form.non_field_errors }}</div>
+      {% endif %}
+      <label for="codigo" class="block text-sm font-semibold text-gray-700">Código de confirmación</label>
+      <input id="codigo" name="codigo" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" placeholder="000000" required autofocus
+             class="w-full rounded-xl border border-gray-200 p-3 text-center text-2xl tracking-[0.35em]" aria-invalid="{% if form.codigo.errors %}true{% else %}false{% endif %}" {% if form.codigo.errors %}aria-describedby="codigo-error"{% endif %}>
+      {% for error in form.codigo.errors %}<p id="codigo-error" role="alert" class="text-sm text-red-700">{{ error }}</p>{% endfor %}
+      <button type="submit" {% if intentos_restantes == 0 or codigo_vencido %}disabled{% endif %} class="w-full rounded-xl bg-rose-600 py-3 font-semibold text-white hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-50">Confirmar código</button>
+    </form>
+    <div class="mt-5 border-t border-rose-100 pt-4">
+      {% if envios_restantes > 0 %}
+      <form method="post" action="{% url 'App_usuarios:reenviar_codigo_registro' %}">
+        {% csrf_token %}
+        <button type="submit" {% if segundos_reenvio > 0 %}disabled{% endif %} class="w-full rounded-xl border border-rose-200 py-3 font-semibold text-rose-700 hover:bg-rose-50 disabled:opacity-50">Reenviar código</button>
+      </form>
+      {% if segundos_reenvio > 0 %}<p class="mt-2 text-center text-xs text-gray-500">Podrás reenviarlo después de {{ segundos_reenvio }} segundos. Actualiza la página para habilitar el botón.</p>{% endif %}
+      {% else %}<p class="text-center text-xs text-gray-500">Has alcanzado el máximo de envíos para este registro.</p>{% endif %}
+      <p class="mt-4 text-center text-xs text-gray-500">¿Te equivocaste en el correo? <a href="{% url 'App_usuarios:registro' %}" class="font-bold text-rose-600 hover:underline">Volver al registro</a></p>
+    </div>
+  </main>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

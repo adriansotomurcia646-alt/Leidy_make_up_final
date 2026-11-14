@@ -1,0 +1,8 @@
+{% extends "App_administracion/base.html" %}
+{% block heading %}Reportes globales{% endblock %}
+{% block content %}
+<section class="card mb-5"><form method="get" class="flex flex-wrap gap-3 items-end"><div><label>Desde</label><input type="date" name="desde" value="{{ desde }}"></div><div><label>Hasta</label><input type="date" name="hasta" value="{{ hasta }}"></div><div><label>Estilista</label><select name="estilista"><option value="">Todas</option>{% for e in estilistas %}<option value="{{ e.pk }}" {% if estilista == e.pk|stringformat:'s' %}selected{% endif %}>{{ e }}</option>{% endfor %}</select></div><button class="btn">Filtrar</button></form>
+<div class="flex flex-wrap gap-3 mt-4"><a class="btn" href="{% url 'App_administracion:exportar' 'xlsx' %}?desde={{ desde }}&hasta={{ hasta }}&estilista={{ estilista }}">Exportar Excel</a><a class="btn btn-alt" href="{% url 'App_administracion:exportar' 'pdf' %}?desde={{ desde }}&hasta={{ hasta }}&estilista={{ estilista }}">Exportar PDF</a></div></section>
+<section class="grid md:grid-cols-3 gap-4 mb-5"><div class="card">Total: ${{ resumen.total|default:0 }}</div><div class="card">Pagado: ${{ resumen.cobrado|default:0 }}</div><div class="card">Pendiente: ${{ resumen.saldo|default:0 }}</div></section>
+<section class="card overflow-x-auto"><table class="data"><tr><th>Cita</th><th>Servicio</th><th>Profesional</th><th>Total</th><th>Abonado</th><th>Pendiente</th></tr>{% for r in registros %}<tr><td>{{ r.cita_id }}</td><td>{{ r.cita.servicio }}</td><td>{{ r.cita.estilista }}</td><td>{{ r.monto_total }}</td><td>{{ r.monto_pagado }}</td><td>{{ r.saldo_pendiente }}</td></tr>{% empty %}<tr><td colspan="6">Sin ingresos registrados.</td></tr>{% endfor %}</table></section>
+{% endblock %}

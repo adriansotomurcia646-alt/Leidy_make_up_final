@@ -1,0 +1,15 @@
+{% extends "App_administracion/base.html" %}
+{% block heading %}Resumen del salón{% endblock %}
+{% block content %}
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-7 maison-metrics">
+<div class="card"><p>Clientes</p><strong class="text-3xl">{{ total_clientes }}</strong></div>
+<div class="card"><p>Estilistas</p><strong class="text-3xl">{{ total_estilistas }}</strong></div>
+<div class="card"><p>Citas totales</p><strong class="text-3xl">{{ total_citas }}</strong></div>
+<div class="card"><p>Solicitudes en espera</p><strong class="text-3xl">{{ pendientes }}</strong></div>
+<div class="card"><p>Ingresos de hoy</p><strong class="text-3xl">${{ ingresos_dia }}</strong></div>
+<div class="card"><p>Ocupación estimada de hoy</p><strong class="text-3xl">{{ ocupacion }} %</strong></div>
+<div class="card"><p>Ingresos del mes</p><strong class="text-3xl">${{ ingresos_mes }}</strong></div></div>
+<section class="card mb-5"><h2 class="font-bold mb-4">Últimas citas</h2><div class="overflow-x-auto"><table class="data"><tr><th>Cliente</th><th>Servicio</th><th>Estilista</th><th>Fecha</th><th>Estado</th></tr>
+{% for cita in citas %}<tr><td>{{ cita.cliente }}</td><td>{{ cita.servicio.nombre }}</td><td>{{ cita.estilista }}</td><td>{{ cita.fecha }} {{ cita.hora_inicio }}</td><td>{{ cita.get_estado_display }}</td></tr>{% empty %}<tr><td colspan="5">Aún no hay citas.</td></tr>{% endfor %}</table></div></section>
+<section class="card"><h2 class="font-bold mb-3">Servicios más solicitados</h2>{% for p in populares %}<p>{{ p.servicio__nombre }}: {{ p.total }}</p>{% empty %}<p>Sin datos.</p>{% endfor %}</section>
+{% endblock %}

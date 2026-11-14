@@ -1,0 +1,33 @@
+IMPORTANTE: para desplegar GRATIS, sigue GUIA_RENDER_GRATIS_GMAIL_API.md (version 3.2).
+No uses Gmail SMTP 587 en Render Free: está bloqueado.
+
+LEIDY MAKE UP | MAISON 3.2
+==========================
+
+Proyecto Django con diseño visual completamente renovado.
+
+EN LINUX:
+1. Descomprime este ZIP.
+2. Abre una terminal dentro de la carpeta LeidyMakeUp_Maison_3_0 (donde está manage.py).
+3. Ejecuta: bash iniciar_linux.sh
+4. Abre: http://127.0.0.1:8000/
+
+SUPERUSUARIO:
+python manage.py createsuperuser
+
+CAMBIAR CONTRASEÑA:
+python manage.py changepassword NOMBRE_DEL_USUARIO
+
+ESTILISTA:
+Crea primero una Persona con rol Estilista en /admin/ y luego un perfil Estilista asociado a esa Persona.
+
+FOTOGRAFÍAS:
+Desde el panel de estilista, Servicios -> Agregar/Editar -> Adjuntar varias fotografías -> Guardar.
+
+VERIFICACIÓN DE GMAIL:
+Usa Gmail API con OAuth 2.0, no SMTP ni contraseñas de aplicación. Sigue GUIA_RENDER_GRATIS_GMAIL_API.md para autorizar localmente la cuenta emisora; el refresh token se guarda en .env y no se imprime. Las clientas no autorizan OAuth.
+
+IMPORTANTE:
+La carpeta no incluye datos privados ni la base de datos anterior. Si necesitas reutilizar clientes y citas existentes, haz copia de seguridad de tu db.sqlite3 y de las fotografías antes de migrar. No subas .env a GitHub.
+
+Lee README.md para instalaciones manuales, preparación de Render y pruebas.

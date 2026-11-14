@@ -1,0 +1,10 @@
+-r requirements.txt
+psycopg[binary]>=3.2,<4
+gunicorn>=23,<25
+whitenoise>=6.8,<7
+dj-database-url>=2.3,<4
+django-storages[s3]>=1.14,<2
+django-redis>=5.4,<7
+requests>=2.32,<3
+google-auth>=2.35,<3
+google-auth-oauthlib>=1.2,<2

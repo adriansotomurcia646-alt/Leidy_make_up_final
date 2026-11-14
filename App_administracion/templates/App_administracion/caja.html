@@ -1,0 +1,8 @@
+{% extends "App_administracion/base.html" %}
+{% block heading %}Cierre diario de caja{% endblock %}
+{% block content %}
+<section class="card mb-5"><h2 class="text-xl font-bold">Pagos de hoy: ${{ total }}</h2>{% if cierre %}<p>Hoy la caja está cerrada por {{ cierre.cerrado_por }} a las {{ cierre.cerrado_en }}.</p>{% else %}<form action="{% url 'App_administracion:cerrar_caja' %}" method="post" class="mt-4">{% csrf_token %}<button class="btn" type="submit">Cerrar caja del día</button></form>{% endif %}</section>
+<div class="grid lg:grid-cols-2 gap-5"><section class="card"><h3 class="font-bold mb-3">Movimientos de hoy</h3><table class="data"><tr><th>Fecha</th><th>Método</th><th>Monto</th></tr>{% for p in pagos %}<tr><td>{{ p.fecha }}</td><td>{{ p.get_metodo_display }}</td><td>{{ p.monto }}</td></tr>{% empty %}<tr><td colspan="3">Sin pagos.</td></tr>{% endfor %}</table></section>
+<section class="card"><h3 class="font-bold mb-3">Historial de cierres</h3>{% for c in cierres %}<p>{{ c.fecha }}: ${{ c.total }} · {{ c.cerrado_por }}</p>{% empty %}<p>Sin cierres.</p>{% endfor %}</section></div>
+<section class="card mt-5"><h2 class="font-bold">Copia de seguridad</h2><p class="text-sm my-3">La descarga contiene datos personales. Consérvala en un sitio privado y protegido.</p><form method="post" action="{% url 'App_administracion:respaldar' %}">{% csrf_token %}<button type="submit" class="btn">Descargar respaldo SQLite</button></form></section>
+{% endblock %}

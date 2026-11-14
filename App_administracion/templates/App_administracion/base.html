@@ -1,0 +1,32 @@
+{% load static %}
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Administración — Leidy Make Up{% endblock %}</title>
+<script src="https://cdn.tailwindcss.com"></script><style>
+input,select,textarea {border:1px solid #f0ced8;border-radius:0.75rem;padding:.55rem .75rem;max-width:100%;width:100%}
+label{display:block;font-weight:600;margin-top:.4rem}.errorlist{color:#9f1239}.data{width:100%;border-collapse:collapse}.data th,.data td{padding:.65rem;text-align:left;border-bottom:1px solid #fce7f3;vertical-align:top}
+.data th{background:#fff1f2;font-size:.85rem;color:#881337}.btn{display:inline-block;background:#9d174d;color:white;padding:.55rem 1rem;border-radius:.8rem;font-weight:600;min-height:2.5rem}
+.btn-alt{background:white;color:#9d174d;border:1px solid #f9a8d4}.card{background:white;padding:1.5rem;border:1px solid #fce7f3;border-radius:1.25rem}
+</style><link rel="stylesheet" href="{% static 'css/atelier.css' %}"><link rel="stylesheet" href="{% static 'css/refinement.css' %}"><link rel="stylesheet" href="{% static 'css/maison.css' %}">
+</head><body class="lm-dashboard bg-rose-50 text-slate-800">
+<div class="lg:flex min-h-screen"><aside id="lm-sidebar" class="lm-sidebar lg:w-64 shrink-0 bg-white border-b lg:border-b-0 lg:border-r border-rose-100 p-5"><div class="lm-mobile-bar"><a class="lm-mobile-brand" href="/" aria-label="Leidy Make Up, inicio"><span class="lm-mobile-mark">L</span><span><strong>Leidy Make Up</strong><small>Administración</small></span></a><button type="button" class="lm-sidebar-toggle" aria-controls="lm-sidebar" aria-expanded="false" data-lm-sidebar-toggle><span aria-hidden="true">☰</span><span>Menú</span></button></div>
+<a class="lm-admin-brand" href="{% url 'App_administracion:inicio' %}"><span class="lm-admin-mark">L</span><span><strong>Leidy Make Up</strong><small>ATELIER · ADMINISTRACIÓN</small></span></a>
+<p class="text-sm text-slate-500 mb-5">Panel Administrador</p>
+<nav class="flex flex-wrap lg:flex-col gap-2 text-sm font-medium">
+<a href="{% url 'App_administracion:inicio' %}" class="p-2 rounded-xl hover:bg-rose-100">Resumen</a>
+<a href="{% url 'App_administracion:usuarios' %}" class="p-2 rounded-xl hover:bg-rose-100">Cuentas y roles</a>
+<a href="{% url 'App_administracion:servicios' %}" class="p-2 rounded-xl hover:bg-rose-100">Servicios</a>
+<a href="{% url 'App_administracion:portada' %}" class="p-2 rounded-xl hover:bg-rose-100">Fotos de portada</a>
+<a href="{% url 'App_administracion:agenda' %}" class="p-2 rounded-xl hover:bg-rose-100">Agenda y políticas</a>
+<a href="{% url 'App_administracion:clientes' %}" class="p-2 rounded-xl hover:bg-rose-100">Clientes</a>
+<a href="{% url 'App_administracion:reportes' %}" class="p-2 rounded-xl hover:bg-rose-100">Ingresos y reportes</a>
+<a href="{% url 'App_administracion:caja' %}" class="p-2 rounded-xl hover:bg-rose-100">Cierre de caja</a>
+<a href="{% url 'App_administracion:mensajes' %}" class="p-2 rounded-xl hover:bg-rose-100">Mensajes</a>
+<a href="{% url 'App_administracion:archivos' %}" class="p-2 rounded-xl hover:bg-rose-100">Referencias</a>
+<a href="{% url 'App_administracion:auditoria' %}" class="p-2 rounded-xl hover:bg-rose-100">Auditoría</a>
+<a href="{% url 'App_administracion:ayuda' %}" class="p-2 rounded-xl hover:bg-rose-100">Ayuda</a>
+</nav><form method="post" action="{% url 'App_usuarios:logout' %}" class="mt-6">{% csrf_token %}<button class="btn">Cerrar sesión</button></form>
+</aside><main id="lm-dashboard-content" class="lm-main flex-1 p-5 md:p-8 min-w-0"><div class="max-w-7xl mx-auto">
+<div class="lm-admin-page-header"><div><span class="lm-dashboard-breadcrumb">LEIDY MAKE UP / GESTIÓN</span><h1 class="text-3xl font-bold text-rose-900 mb-5">{% block heading %}Administración{% endblock %}</h1></div><a class="lm-dashboard-website" href="/?vista=publica" target="_blank" rel="noopener">Ver sitio público ↗</a></div>
+{% for message in messages %}<p role="status" class="card mb-3">{{ message }}</p>{% endfor %}
+{% block content %}{% endblock %}</div></main></div><script src="{% static 'js/atelier-ui.js' %}" defer></script></body></html>

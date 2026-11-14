@@ -1,0 +1,4 @@
+Solicitaste restablecer tu contraseña de Leidy Make Up.
+Visita el siguiente enlace:
+{{ protocol }}://{{ domain }}{% url 'App_usuarios:password_reset_confirm' uidb64=uid token=token %}
+Si no solicitaste este cambio, ignora el mensaje.

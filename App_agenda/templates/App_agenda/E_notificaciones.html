@@ -1,0 +1,4 @@
+{% extends 'App_usuarios/E_base.html' %}{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-2xl"><h1 class="text-xl font-bold">Avisos del salón</h1>
+<form method="post" class="my-3">{% csrf_token %}<button class="text-xs bg-rose-700 text-white rounded p-2">Marcar todas como leídas</button></form>
+{% for n in notificaciones %}<article class="border-b p-3 {% if not n.leida %}bg-amber-50{% endif %}"><strong>{{ n.titulo }}</strong><p>{{ n.contenido }}</p><small>{{ n.creada_en }}</small></article>{% empty %}<p>No hay avisos.</p>{% endfor %}</div>{% endblock %}

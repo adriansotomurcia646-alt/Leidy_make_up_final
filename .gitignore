@@ -1,0 +1,13 @@
+.env
+client_secret*.json
+*.py[cod]
+__pycache__/
+.venv/
+ev_leidy/
+venv/
+db.sqlite3
+db.sqlite3-*
+media/
+backups/
+staticfiles/
+.pytest_cache/

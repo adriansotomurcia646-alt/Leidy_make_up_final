@@ -1,0 +1,6 @@
+{% extends "App_administracion/base.html" %}
+{% block heading %}Directorio e historial de clientes{% endblock %}
+{% block content %}
+<section class="card overflow-x-auto"><table class="data"><tr><th>Cliente</th><th>Correo</th><th>Teléfono</th><th>Citas</th><th>Cancelaciones</th><th>Detalle</th></tr>{% for c in clientes %}<tr><td>{{ c.persona.get_full_name }}</td><td>{{ c.persona.email }}</td><td>{{ c.telefono }}</td><td>{{ c.numero_citas }}</td><td>{{ c.canceladas }}</td><td><a class="underline" href="?cliente={{ c.pk }}">Ver historial</a></td></tr>{% endfor %}</table></section>
+{% if detalle %}<section class="card mt-5"><h2 class="font-bold">Citas de {{ detalle }}</h2><table class="data"><tr><th>Fecha</th><th>Servicio</th><th>Estado</th><th>Profesional</th></tr>{% for c in citas %}<tr><td>{{ c.fecha }}</td><td>{{ c.servicio }}</td><td>{{ c.get_estado_display }}</td><td>{{ c.estilista }}</td></tr>{% empty %}<tr><td colspan="4">Sin historial.</td></tr>{% endfor %}</table></section>{% endif %}
+{% endblock %}
