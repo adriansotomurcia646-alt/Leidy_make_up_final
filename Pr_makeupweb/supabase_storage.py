@@ -20,7 +20,8 @@ class SupabaseStorage(Storage):
         self.bucket = bucket or (settings.SUPABASE_PUBLIC_BUCKET if public else settings.SUPABASE_PRIVATE_BUCKET)
         self.public = public
         self.api_base = settings.SUPABASE_URL.rstrip('/') + '/storage/v1'
-        self.key = settings.SUPABASE_SECRET_KEY
+        self.key = settings.SUPABASE_SECRET_KEY or settings.SUPABASE_SERVICE_ROLE_KEY
+        self.service_role_key = settings.SUPABASE_SERVICE_ROLE_KEY
         self.timeout = (10, 30)
 
     def _path(self, name):
@@ -43,8 +44,11 @@ class SupabaseStorage(Storage):
         # Nuevas claves sb_secret son opacas; NO se pasan como JWT Bearer.
         # Las claves service_role antiguas sí son JWT, por eso se añade Bearer.
         encabezados = {'apikey': self.key}
-        if not self.key.startswith('sb_secret_'):
-            encabezados['Authorization'] = f'Bearer {self.key}'
+        token = self.service_role_key or (
+            self.key if not self.key.startswith('sb_secret_') else ''
+        )
+        if token:
+            encabezados['Authorization'] = f'Bearer {token}'
         if mimetype:
             encabezados['Content-Type'] = mimetype
             encabezados['x-upsert'] = 'false'

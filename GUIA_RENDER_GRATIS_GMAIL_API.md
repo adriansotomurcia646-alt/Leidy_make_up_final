@@ -32,11 +32,12 @@
 
 ## B. Supabase Free: DB y fotos (sin datos perdidos)
 1. Ve a https://supabase.com y crea un proyecto **Free** (no elegir Pro ni pruebas de pago). Guarda la contraseña de base de datos.
-2. Supabase > **Database > Connect**: copia la conexión URI de **Session pooler** (compatible IPv4, puerto usual 5432), NO solo el direct host IPv6. Esta URL es `DATABASE_URL` en Render; incluye contraseña, **no compartirla**. Si tu contraseña tiene símbolos, usa el URL encoded correcto.
-3. Supabase > **Storage**: crea bucket `leidy-publico`, tipo **Public** (únicamente fotos de servicios y portada). Crea `leidy-privado`, tipo **Private** (adjuntos de citas). NO hagas público el bucket privado.
-4. Supabase > **Project Settings > API Keys**: identifica una clave de servidor **Secret key** (`sb_secret_...`, no la *publishable*) para Storage. Guárdala como `SUPABASE_SECRET_KEY` SOLO en Render. Nunca la incluyas en frontend ni en GitHub.
-5. Anota la URL del proyecto `https://...supabase.co` como `SUPABASE_URL`.
-6. El código usa `supabase_storage.py`: fotos públicas con URLs públicas HTTPS y adjuntos privados sin URL pública y con descarga autorizada desde Django.
+2. Supabase > **Database > Connect**: copia la conexión URI de **Session pooler** (compatible IPv4, puerto usual 5432), NO solo el direct host IPv6. Esta URL es `DATABASE_URL` en Render; incluye contraseña, **no compartirla**. Sustituye el marcador de contraseña completo, incluidos sus corchetes de ejemplo. Si la contraseña contiene caracteres reservados, codifica solo la contraseña con `urllib.parse.quote(password, safe='')`; no codifiques la URI completa ni dejes corchetes literales.
+3. En Linux, valida el formato localmente sin mostrar la URI: `python scripts/diagnosticar_supabase.py`. Cuando el formato sea válido, prueba la conexión TLS real con `python scripts/diagnosticar_supabase.py --connect`; esta prueba ejecuta únicamente `SELECT 1`.
+4. Supabase > **Storage**: crea bucket `leidy-publico`, tipo **Public** (únicamente fotos de servicios y portada). Crea `leidy-privado`, tipo **Private** (adjuntos de citas). NO hagas público el bucket privado.
+5. Supabase > **Project Settings > API Keys**: guarda la clave nueva de servidor **Secret key** (`sb_secret_...`, no la *publishable*) como `SUPABASE_SECRET_KEY` solo en Render. Para Storage privado configura también `SUPABASE_SERVICE_ROLE_KEY` con el JWT de servidor legacy: la API key `sb_secret_...` no es un JWT y no debe enviarse como `Authorization: Bearer`; los endpoints privados requieren autorización de servidor. Ambas claves permanecen solo en el backend.
+6. Anota la URL del proyecto `https://...supabase.co` como `SUPABASE_URL`.
+7. El código usa `supabase_storage.py`: fotos públicas con URLs públicas HTTPS y adjuntos privados sin URL pública y con descarga autorizada desde Django.
 
 Nota: en Supabase Free hay cuotas de base de datos, almacenamiento y egreso; puede pausarse por inactividad. No se cobra mientras sigas en el plan Free dentro de sus condiciones, pero no es SLA ni solución para un negocio con tráfico real.
 
@@ -46,12 +47,13 @@ Nota: en Supabase Free hay cuotas de base de datos, almacenamiento y egreso; pue
 3. Render solicita los secretos `sync:false`. Completa:
    - `DATABASE_URL`: conexión PostgreSQL **Session pooler** de Supabase.
    - `GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN`: OAuth propio.
-   - `SUPABASE_URL`, `SUPABASE_SECRET_KEY`: Supabase; la clave `sb_secret_` solo en el backend.
+   - `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `SUPABASE_SERVICE_ROLE_KEY`: Supabase; claves solo en el backend.
    - `DJANGO_SECRET_KEY`: Render la genera automáticamente.
    - `SUPABASE_PUBLIC_BUCKET=leidy-publico`, `SUPABASE_PRIVATE_BUCKET=leidy-privado`.
    - `EMAIL_BACKEND=Pr_makeupweb.gmail_backend.GmailAPIBackend`.
    - `GMAIL_SENDER_EMAIL=make.up.leidy.1986@gmail.com`.
    - `DJANGO_CSRF_TRUSTED_ORIGINS=https://*.onrender.com`.
+   - `DB_POOLER_MODE=session` para el pooler de sesión de Supabase.
 4. Si Render no solicita una variable, añádela a **Web Service > Environment** manualmente y pulsa **Save, deploy**.
 5. Abre `https://<tu-subdominio>.onrender.com` y registra una clienta de prueba. Comprueba llegada de código, verificación, login y carga de fotos desde administrador.
 6. Para crear el superusuario en Render Free (sin consola Shell de pago), puedes crear la cuenta inicial localmente *apuntando a la misma DATABASE_URL Supabase* con `python manage.py createsuperuser` y luego cerrar esa conexión local. No pongas credenciales de administrador en scripts públicos. Ten mucho cuidado: eso escribe la base remota.
@@ -59,6 +61,7 @@ Nota: en Supabase Free hay cuotas de base de datos, almacenamiento y egreso; pue
 ## D. ¿Realmente es $0?
 - Render Free: suspensión tras 15 minutos sin visitas, aproximadamente 1 minuto para reactivar, cuotas mensuales; subida de archivos local **no** persiste.
 - Supabase Free: 500 MB DB, 1 GB Storage, pausas por inactividad y límites de transferencia.
+- Supabase está retirando las claves legacy `service_role` al final de 2026. Revisa su guía de migración de Storage antes de esa fecha; no reemplaces el JWT Bearer por `sb_secret_...` sin validar la compatibilidad del endpoint privado.
 - Gmail API: cuotas Google y límites diarios Gmail; no es infraestructura de email transaccional garantizada. El scope `gmail.send` es sensible y pueden exigir verificación para producción.
 - El dominio gratuito `onrender.com` es de la web, NO es un dominio de correo propio.
 - No te pediré tarjeta ni pagos. **Si un proveedor exige pasar a un plan de pago, detente** antes de aceptar.

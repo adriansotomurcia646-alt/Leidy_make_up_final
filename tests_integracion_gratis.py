@@ -2,7 +2,7 @@
 from unittest.mock import Mock, patch
 from django.core.mail import EmailMessage
 from django.test import SimpleTestCase, override_settings
-from Pr_makeupweb.gmail_backend import GmailAPIBackend
+from Pr_makeupweb.gmail_backend import GmailAPIBackend, GmailAPIError
 from Pr_makeupweb.supabase_storage import SupabaseStorage
 
 class GmailAPITests(SimpleTestCase):
@@ -28,10 +28,20 @@ class GmailAPITests(SimpleTestCase):
         cred.return_value = Mock(token='token')
         post.return_value.json.return_value = {}
         msg = EmailMessage('Código', '123456', 'sender@gmail.com', ['c@gmail.com'])
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(GmailAPIError):
             GmailAPIBackend().send_messages([msg])
 
 class StorageAPITests(SimpleTestCase):
+    @override_settings(SUPABASE_URL='https://proyecto.supabase.co',
+                       SUPABASE_SECRET_KEY='sb_secret_mock-key',
+                       SUPABASE_SERVICE_ROLE_KEY='mock-service-role-jwt',
+                       SUPABASE_PUBLIC_BUCKET='leidy-publico', SUPABASE_PRIVATE_BUCKET='leidy-privado')
+    def test_api_key_and_private_storage_jwt_use_separate_headers(self):
+        headers = SupabaseStorage(public=False)._headers()
+
+        self.assertEqual(headers['apikey'], 'sb_secret_mock-key')
+        self.assertEqual(headers['Authorization'], 'Bearer mock-service-role-jwt')
+
     @override_settings(SUPABASE_URL='https://proyecto.supabase.co',
                        SUPABASE_SECRET_KEY='supersecret',
                        SUPABASE_PUBLIC_BUCKET='leidy-publico', SUPABASE_PRIVATE_BUCKET='leidy-privado')

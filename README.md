@@ -8,6 +8,7 @@ Esta versión conserva los roles, reservas, galerías, el diseño Maison y el ca
 
 - `Pr_makeupweb/gmail_backend.py`: backend Django para Gmail API HTTPS con OAuth, sin SMTP.
 - `App_usuarios/management/commands/configurar_gmail_api.py`: asistente para obtener tu autorización local de la cuenta remitente.
+- `scripts/diagnosticar_supabase.py`: valida `DATABASE_URL` sin imprimirla; `--connect` hace una prueba TLS real con `SELECT 1`.
 - `Pr_makeupweb/supabase_storage.py`: almacenamiento persistente de fotos públicas y adjuntos privados.
 - `render.yaml`: Web Service **Free** sin bases Render Postgres con vencimiento.
 - `.env.example`: variables documentadas sin credenciales.

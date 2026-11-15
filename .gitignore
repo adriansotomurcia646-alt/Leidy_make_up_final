@@ -1,5 +1,14 @@
 .env
+.env.*
+!.env.example
 client_secret*.json
+credentials*.json
+token.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.token
 *.py[cod]
 __pycache__/
 .venv/
@@ -11,3 +20,6 @@ media/
 backups/
 staticfiles/
 .pytest_cache/
+*.tmp
+*.swp
+.DS_Store

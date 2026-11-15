@@ -15,6 +15,7 @@ from pathlib import Path
 
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
+from Pr_makeupweb.database_config import DatabaseURLValidationError, parse_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -112,10 +113,14 @@ DATABASES = {
 
 # PostgreSQL en despliegue. SQLite solo para desarrollo y pruebas.
 if os.environ.get('DATABASE_URL'):
-    import dj_database_url
-    DATABASES['default'] = dj_database_url.config(
-        default=os.environ['DATABASE_URL'], conn_max_age=0 if os.environ.get('DB_POOLER_MODE') == 'transaction' else 60, ssl_require=not DEBUG
-    )
+    try:
+        DATABASES['default'] = parse_database_url(
+            os.environ['DATABASE_URL'],
+            conn_max_age=0 if os.environ.get('DB_POOLER_MODE') == 'transaction' else 60,
+            ssl_require=not DEBUG,
+        )
+    except DatabaseURLValidationError as error:
+        raise ImproperlyConfigured(str(error)) from None
 elif os.environ.get('DB_ENGINE', '').lower() == 'postgresql':
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.postgresql',
@@ -191,7 +196,8 @@ STORAGES = {
 # En Render Free, todas las imágenes y adjuntos requieren almacenamiento externo.
 # Supabase Free: un bucket publico de galería y otro PRIVADO para citas.
 SUPABASE_URL = os.environ.get('SUPABASE_URL', '').rstrip('/')
-SUPABASE_SECRET_KEY = os.environ.get('SUPABASE_SECRET_KEY') or os.environ.get('SUPABASE_SERVICE_ROLE_KEY', '')
+SUPABASE_SERVICE_ROLE_KEY = os.environ.get('SUPABASE_SERVICE_ROLE_KEY', '')
+SUPABASE_SECRET_KEY = os.environ.get('SUPABASE_SECRET_KEY') or SUPABASE_SERVICE_ROLE_KEY
 SUPABASE_PUBLIC_BUCKET = os.environ.get('SUPABASE_PUBLIC_BUCKET', 'leidy-publico')
 SUPABASE_PRIVATE_BUCKET = os.environ.get('SUPABASE_PRIVATE_BUCKET', 'leidy-privado')
 if SUPABASE_URL and SUPABASE_SECRET_KEY:
@@ -205,6 +211,10 @@ if SUPABASE_URL and SUPABASE_SECRET_KEY:
     }
 elif (SUPABASE_URL or SUPABASE_SECRET_KEY) and not DEBUG:
     raise ImproperlyConfigured('SUPABASE_URL y SUPABASE_SECRET_KEY deben configurarse juntas.')
+if not DEBUG and SUPABASE_SECRET_KEY.startswith('sb_secret_') and not SUPABASE_SERVICE_ROLE_KEY:
+    raise ImproperlyConfigured(
+        'Configura SUPABASE_SERVICE_ROLE_KEY para autorizar el acceso servidor a los archivos privados de Storage.'
+    )
 
 # Alternativa opcional para las fotos públicas: bucket compatible S3.
 # La base de datos no almacena los binarios de las fotos.
